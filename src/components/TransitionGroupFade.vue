@@ -1,0 +1,11 @@
+<template>
+  <TransitionGroup
+    enter-from-class="opacity-0"
+    leave-to-class="opacity-0"
+    enter-active-class="transition-all"
+    leave-active-class="transition-all"
+    move-class="transition-all"
+  >
+    <slot></slot>
+  </TransitionGroup>
+</template>

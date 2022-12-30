@@ -6,6 +6,7 @@ import { sortByTime } from "./utils/sortByTime";
 import type { Task } from "./types/task";
 import TaskCard from "./components/TaskCard.vue";
 import TaskForm from "./components/TaskForm.vue";
+import TransitionGroupFade from "./components/TransitionGroupFade.vue";
 
 const tasks = ref<Task[]>([]);
 const formInput = ref("");
@@ -52,13 +53,15 @@ const countOfFinishedTasks = computed(() =>
       <div v-show="countOfTasks > 0">
         {{ countOfFinishedTasks }} / {{ countOfTasks }} finished
       </div>
-      <TaskCard
-        v-for="task in sortedTasks"
-        :key="task.id"
-        :task="task"
-        @toggle-task="toggleTask"
-        @delete-task="deleteTask"
-      />
+      <TransitionGroupFade>
+        <TaskCard
+          v-for="task in sortedTasks"
+          :key="task.id"
+          :task="task"
+          @toggle-task="toggleTask"
+          @delete-task="deleteTask"
+        />
+      </TransitionGroupFade>
     </div>
   </div>
 </template>
