@@ -3,6 +3,7 @@ import App from "./App.vue";
 import "./assets/main.css";
 import { OhVueIcon, addIcons } from "oh-vue-icons";
 import { BiTrash } from "oh-vue-icons/icons";
+import "@fontsource/inter/variable.css";
 
 const app = createApp(App);
 
