@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import TransitionFade from "./TransitionFade.vue";
 
 const emit = defineEmits<{
   (e: "update:modelValue", value: string): void;
@@ -15,23 +16,14 @@ const formInput = computed({
   },
 });
 
-const isChanged = ref(false);
-const hasError = computed(() => {
-  if (!isChanged.value) return false;
-  if (formInput.value === "") return true;
-  return false;
-});
-
-function handleInput() {
-  if (isChanged.value) return;
-  isChanged.value = true;
-}
+const isShowMessage = ref(false);
 
 function handleSubmit() {
-  if (hasError.value) {
+  if (formInput.value === "" && !isShowMessage.value) {
+    isShowMessage.value = true;
     return;
   }
-  isChanged.value = false;
+  if (isShowMessage.value) isShowMessage.value = false;
   emit("add-task");
 }
 </script>
@@ -48,10 +40,13 @@ function handleSubmit() {
         class="rounded border border-slate-300 p-1 px-2"
         type="text"
         aria-required="true"
-        :aria-invalid="hasError"
-        @input="handleInput"
+        :aria-invalid="isShowMessage"
       />
-      <span class="text-red-700" v-show="hasError">Can't be empty</span>
+      <TransitionFade>
+        <span class="text-slate-700" v-show="isShowMessage">
+          Task's title can't be empty
+        </span>
+      </TransitionFade>
     </label>
     <button
       class="w-full rounded-md bg-blue-500 p-1 text-white hover:shadow-md"
