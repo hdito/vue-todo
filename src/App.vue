@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { nanoid } from "nanoid";
-import { computed, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { sortByIsFinished } from "./utils/sortByIsFinished";
 import { sortByTime } from "./utils/sortByTime";
 import type { Task } from "./types/task";
 import TaskCard from "./components/TaskCard.vue";
 import TaskForm from "./components/TaskForm.vue";
 import TransitionGroupFade from "./components/TransitionGroupFade.vue";
+import { cloneDeep } from "lodash";
 
 const tasks = ref<Task[]>([]);
 const formInput = ref("");
@@ -43,6 +44,27 @@ const countOfTasks = computed(() => tasks.value.length);
 const countOfFinishedTasks = computed(() =>
   tasks.value.reduce((count, task) => (task.isFinished ? ++count : count), 0)
 );
+
+watch(
+  () => cloneDeep(tasks.value),
+  (newValue) => {
+    localStorage.setItem("tasks", JSON.stringify(newValue));
+  }
+);
+
+onMounted(() => {
+  const stringifiedTasks = localStorage.getItem("tasks");
+  if (!stringifiedTasks) {
+    return;
+  }
+
+  try {
+    const tasksFromStorage = JSON.parse(stringifiedTasks);
+    tasks.value = tasksFromStorage;
+  } catch (error) {
+    console.log(error);
+  }
+});
 </script>
 
 <template>
